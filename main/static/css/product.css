@@ -1,0 +1,29 @@
+html, body {
+  height: 100%;          /* растягиваем всю страницу на высоту окна */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;               /* основной контент занимает всё пространство */
+}
+
+footer {
+  margin-top: auto;      /* футер уходит в самый низ */
+}
+#alert-container {
+  width: 400px;
+  animation: fadeInDown 0.5s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

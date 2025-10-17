@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Корзина - TechStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/orders.css' %}">
+</head>
+<body>
+
+<!-- 🔹 Навигация -->
+{% include "main/navbar.html" %}
+<!-- 🔹 Уведомления -->
+{% if messages %}
+  <div id="alert-container" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1100;">
+    {% for message in messages %}
+      <div class="alert alert-info alert-dismissible fade show shadow" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+<!-- 🔹 Заголовок -->
+<header class="text-center py-5 bg-dark text-white">
+  <h1 class="display-5">Ваша корзина</h1>
+  <p class="lead">Товары, которые вы выбрали для покупки</p>
+</header>
+
+<!-- 🔹 Контент -->
+<div class="container py-5">
+  {% if cart_items %}
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered text-center align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Товар</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Итого</th>
+            <th>Удалить</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart_items %}
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }} ₽</td>
+            <td>
+              <form action="{% url 'update_cart' item.product_id %}" method="post" class="d-flex justify-content-center">
+                {% csrf_token %}
+                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control w-50 me-2">
+                <button type="submit" class="btn btn-sm btn-primary">✔</button>
+              </form>
+            </td>
+            <td>{{ item.subtotal }} ₽</td>
+            <td>
+              <a href="{% url 'remove_from_cart' item.product_id %}" class="btn btn-danger btn-sm">✖</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      <h4>Общая сумма: <span class="text-primary">{{ total }} ₽</span></h4>
+      <a href="{% url 'checkout' %}" class="btn btn-success btn-lg">Оформить заказ</a>
+    </div>
+
+  {% else %}
+    <div class="alert alert-info text-center">
+      Корзина пуста, <a href="{% url 'index' %}" class="alert-link">выберите товары в каталоге</a>
+    </div>
+  {% endif %}
+</div>
+
+<!-- 🔹 Футер -->
+<footer id="contacts" class="bg-dark text-white text-center py-4 mt-auto">
+  <div class="container">
+    <h5>Контакты</h5>
+    <p>Email: support@techstore.ru | Тел: +7 (999) 123-45-67</p>
+    <p>© 2025 TechStore</p>
+  </div>
+</footer>
+<script>
+  // Автоудаление сообщений через 3 секунды
+  setTimeout(() => {
+    document.querySelectorAll('.alert').forEach(el => {
+      let bsAlert = new bootstrap.Alert(el);
+      bsAlert.close();
+    });
+  }, 3000); // 3000 = 3 сек
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

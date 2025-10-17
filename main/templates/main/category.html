@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ category.name }} — TechStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1; /* контент занимает всё пространство, футер внизу */
+    }
+    footer {
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔹 Навигация -->
+{% include "main/navbar.html" %}
+  
+<!-- 🔹 Уведомления -->
+{% if messages %}
+  <div id="alert-container" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1100;">
+    {% for message in messages %}
+      <div class="alert alert-info alert-dismissible fade show shadow" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+  <!-- Main content -->
+  <main class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent p-0">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+      </ol>
+    </nav>
+
+    <h1 class="mb-4">{{ category.name }}</h1>
+
+    <div class="row g-4">
+      {% for p in products %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card product-card h-100 shadow-sm">
+          {% if p.image %}
+            <img src="{% static p.image %}" class="card-img-top" alt="{{ p.name }}" style="height:180px;object-fit:cover;">
+          {% else %}
+            <img src="{% static 'img/no_image.png' %}" class="card-img-top" alt="{{ p.name }}" style="height:180px;object-fit:cover;">
+          {% endif %}
+          <div class="card-body text-center d-flex flex-column">
+            <h6 class="card-title">{{ p.name }}</h6>
+            <p class="card-text mb-3"><strong>{{ p.price }} ₽</strong></p>
+            <div class="mt-auto">
+              <a href="{% url 'product' p.id %}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+              <a href="{% url 'add_to_cart' p.product_id %}" class="btn btn-success btn-sm">В корзину</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p class="text-center">Товаров пока нет в этой категории.</p>
+      {% endfor %}
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer id="contacts" class="bg-dark text-white text-center py-4 w-100">
+    <div class="container-fluid">
+      <h5>Контакты</h5>
+      <p>Email: support@techstore.ru | Тел: +7 (999) 123-45-67</p>
+      <p>© 2025 TechStore</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  // Автоудаление сообщений через 3 секунды
+  setTimeout(() => {
+    document.querySelectorAll('.alert').forEach(el => {
+      let bsAlert = new bootstrap.Alert(el);
+      bsAlert.close();
+    });
+  }, 3000); // 3000 = 3 сек
+</script>
+
+</body>
+</html>

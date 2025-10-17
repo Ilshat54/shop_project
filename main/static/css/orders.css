@@ -1,0 +1,33 @@
+html, body {
+  height: 100%;          /* растягиваем страницу */
+  margin: 0;             /* убираем стандартные отступы браузера */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;               /* контент тянется на всю высоту */
+}
+
+footer {
+  margin-top: auto;      /* футер уходит вниз */
+}
+
+#alert-container {
+  width: 400px;
+  animation: fadeInDown 0.5s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
