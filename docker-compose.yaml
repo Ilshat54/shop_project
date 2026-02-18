@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: shop_db
+    restart: always
+    command: 
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_DATABASE: online_magazin_bt_texnic
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - shop_network
+
+  web:
+    image: shop_app:v1
+    container_name: shop_web
+    restart: always
+    command: |
+      sh -c "
+      echo 'Waiting for database...' &&
+      python -c '
+      import socket, time
+      print(\"Connecting to db:3306\")
+      result = 1
+      while result != 0:
+          time.sleep(1)
+          result = socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((\"db\", 3306))
+          print(\".\")
+      print(\"Database is ready!\")
+      ' &&
+      python manage.py runserver 0.0.0.0:8000
+      "
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 3306
+      DATABASE_NAME: online_magazin_bt_texnic
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+    networks:
+      - shop_network
+
+volumes:
+  mysql_data:
+
+networks:
+  shop_network:
+    driver: bridge
+
+
