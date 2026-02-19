@@ -1,0 +1,33 @@
+[
+  {
+    "model": "main.category",
+    "pk": 100,
+    "fields": {
+      "name": "Тестовая категория из GitFlow",
+      "image": "img/test.png"
+    }
+  },
+  {
+    "model": "main.category",
+    "pk": 101,
+    "fields": {
+      "name": "Ещё одна тестовая категория",
+      "image": "img/test.png"
+    }
+  }
+]
+
+[
+  {
+    "model": "main.product",
+    "pk": 1000,
+    "fields": {
+      "name": "Тестовый товар из ветки feature",
+      "description": "Этот товар создан в рамках лабораторной работы 5",
+      "price": 999.99,
+      "category": 100,
+      "image": "img/test.png",
+      "stock_quantity": 5
+    }
+  }
+]
