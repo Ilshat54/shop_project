@@ -24,6 +24,7 @@ class Product(models.Model):
     characteristics = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     warranty_period = models.IntegerField(default=12, help_text="Гарантийный срок в месяцах")
+    manufacturer = models.CharField(max_length=100, blank=True, null=True, help_text="Производитель товара")
     stock_quantity = models.IntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, db_column="category_id")
     image = models.CharField(max_length=255, blank=True, null=True)
